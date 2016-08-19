@@ -121,6 +121,20 @@ void key() {
 			case 's':
 				PAUSE = false;
 				break;
+
+			case 'h':
+				game->changeD(LEFT);
+				break;
+			case 'l':
+				game->changeD(RIGHT);
+				break;
+			case 'k':
+				game->changeD(UP);
+				break;
+			case 'j':
+				game->changeD(DOWN);
+				break;
+
 			case '4':
 				game->changeD(LEFT);
 				break;
