@@ -164,7 +164,10 @@ bool gaming() {
 int main() {
 
 	hideCursor();
+	printf("please select the level(1~6)\n");
+	
 	level = 1;
+	scanf("%d", &level);
 	switch (level) {
 		case 1:
 			T = 200;
