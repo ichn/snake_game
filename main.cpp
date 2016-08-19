@@ -11,7 +11,7 @@ TODO : reflect and more barriers
 #include "list.h"
 #include "random.h"
 
-const int W = 20;
+const int W = 40;
 const int H = 20;
 
 int level, T;
@@ -29,7 +29,6 @@ struct Point {
 	}
 };
 
-char barrier = '*';
 char gem = '@';
 char body = '+';
 char blank = ' ';
@@ -55,13 +54,17 @@ struct gameBoard {
 		rd = new random();
 		memset(bd, ' ', sizeof bd);
 		for (int i = 0; i < W+2; ++i) {
-			bd[0][i] = barrier;
-			bd[H+1][i] = barrier;
+			bd[0][i] = '-';
+			bd[H+1][i] = '-';
 		}
 		for (int i = 0; i < H+2; ++i) {
-			bd[i][0] = barrier;
-			bd[i][W+1] = barrier;
+			bd[i][0] = '|';
+			bd[i][W+1] = '|';
 		}
+		bd[H+1][0] = '+';
+		bd[H+1][W+1] = '+';
+		bd[0][W+1] = '+';
+		bd[0][0] = '+';
 		que.push_back(Point(1, 1));
 		d = 0;
 		bd[1][1] = head[d];
@@ -110,6 +113,7 @@ struct gameBoard {
 
 gameBoard *game;
 bool PAUSE;
+bool RAND_TIME;
 
 void key() {
 	if (kbhit()) {
@@ -155,7 +159,6 @@ void key() {
 }
 
 bool gaming() {
-	PAUSE = false;
 	game = new gameBoard();
 
 	game->print();
@@ -169,6 +172,9 @@ bool gaming() {
 			return false;
 		}
 		game->print();
+		if (RAND_TIME) {
+			T = game->rd->rnd(10, 100);
+		}
 		Sleep(T);
 	}
 
@@ -178,6 +184,8 @@ bool gaming() {
 int main() {
 
 	hideCursor();
+	PAUSE = false;
+	RAND_TIME = false;
 	printf("please select the level(1~6)\n");
 	
 	level = 1;
@@ -187,19 +195,19 @@ int main() {
 			T = 200;
 			break;
 		case 2:
-			T = 180;
+			T = 100;
 			break;
 		case 3:
-			T = 160;
+			T = 50;
 			break;
 		case 4:
-			T = 140;
+			T = 25;
 			break;
 		case 5:
-			T = 120;
+			T = 10;
 			break;
 		case 6:
-			T = 100;
+			RAND_TIME = true;
 			break;
 	}
 	while (gaming());
