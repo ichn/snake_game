@@ -1,8 +1,6 @@
 /*
-TODO : board can be prettified
 TODO : multi-player
 TODO : reflect and more barriers
- 
  */
 #include <cstdio>
 #include <cstdlib>
@@ -29,29 +27,23 @@ struct Point {
 	}
 };
 
+
 char gem = '@';
 char body = '+';
 char blank = ' ';
 char head[] = {'>', '<', 'v', '^'};
+
 struct gameBoard {
-
 	char bd[H+2][W+2];
-	random *rd;
-	int d;
-	list<Point> que;
-
-	void setGem() {
-		int gx = rd->rnd(1, H);
-		int gy = rd->rnd(1, W);
-		while (bd[gx][gy] != blank) {
-			gx = rd->rnd(1, H);
-			gy = rd->rnd(1, W);
+	void print() {
+		cls();
+		for (int i = 0; i < H+2; ++i) {
+			for (int j = 0; j < W+2; ++j)
+				putchar(bd[i][j]);
+			puts("");
 		}
-		bd[gx][gy] = gem;
 	}
-
 	gameBoard() {
-		rd = new random();
 		memset(bd, ' ', sizeof bd);
 		for (int i = 0; i < W+2; ++i) {
 			bd[0][i] = '-';
@@ -65,9 +57,45 @@ struct gameBoard {
 		bd[H+1][W+1] = '+';
 		bd[0][W+1] = '+';
 		bd[0][0] = '+';
+	}
+	void set(int x, int y, char c) {
+		bd[x][y] = 'c';
+		gotoxy(x, y);
+		putchar(c);
+	}
+	bool placeGem(int x, int y) {
+		if (bd[x][y] != blank)
+			return false;
+		set(x, y, gem);
+		return true;
+	}
+};
+struct Game {
+
+	random *rd;
+	gameBoard *gb;
+	int d;
+	list<Point> que;
+
+	void setGem() {
+		int gx = rd->rnd(1, H);
+		int gy = rd->rnd(1, W);
+		while (!gb->placeGem(gx, gy)) {
+			gx = rd->rnd(1, H);
+			gy = rd->rnd(1, W);
+		}
+	}
+
+	Game() {
+		rd = new random();
+		gb = new gameBoard();
+
+		gb->print();
+
 		que.push_back(Point(1, 1));
 		d = 0;
-		bd[1][1] = head[d];
+
+		gb->set(1, 1, head[d]);
 		setGem();
 	}
 
@@ -75,16 +103,16 @@ struct gameBoard {
 		Point hd = que.get_front();
 		Point newHd = Point(hd.x + dx[d], hd.y + dy[d]);
 		que.push_front(newHd);
-		bd[hd.x][hd.y] = body;
-		if (bd[newHd.x][newHd.y] == gem) {
+		gb->set(hd.x, hd.y, body);
+		if (gb->bd[newHd.x][newHd.y] == gem) {
 			setGem();
 			return true;
 		}
 
-		if (bd[newHd.x][newHd.y] == blank) {
-			bd[newHd.x][newHd.y] = head[d];
+		if (gb->bd[newHd.x][newHd.y] == blank) {
+			gb->set(newHd.x, newHd.y, head[d]);
 			Point rr = que.get_back();
-			bd[rr.x][rr.y] = blank;
+			gb->set(rr.x, rr.y, blank);
 			que.pop_back();
 			return true;
 		}
@@ -101,17 +129,12 @@ struct gameBoard {
 	}
 
 	void print() {
-		cls();
-		for (int i = 0; i < H+2; ++i) {
-			for (int j = 0; j < W+2; ++j)
-				putchar(bd[i][j]);
-			puts("");
-		}
+
 	}
 
 };
 
-gameBoard *game;
+Game *game;
 bool PAUSE;
 bool RAND_TIME;
 
@@ -159,9 +182,8 @@ void key() {
 }
 
 bool gaming() {
-	game = new gameBoard();
+	game = new Game();
 
-	game->print();
 	while (true) {
 		
 		key();
@@ -171,7 +193,7 @@ bool gaming() {
 		if (!game->move()) {
 			return false;
 		}
-		game->print();
+	//	game->print();
 		if (RAND_TIME) {
 			T = game->rd->rnd(10, 100);
 		}
