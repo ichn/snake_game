@@ -9,8 +9,13 @@
 #include <cstdlib>
 #include <algorithm>
 #include <vector>
+#include <cstring>
 using namespace std;
 #include "random.h"
+#include "game.h"
+
+const int W = 40;
+const int H = 20;
 
 const int dx[] = {0, 0, 1, -1};
 const int dy[] = {1, -1, 0, 0};
@@ -34,6 +39,14 @@ struct gameBoard {
 
 private:
 	char bd[H+2][W+2];
+	void print() {
+		cls();
+		for (int i = 0; i < H+2; ++i) {
+			for (int j = 0; j < W+2; ++j)
+				putchar(bd[i][j]);
+			puts("");
+		}
+	}
 
 public:
 
@@ -49,6 +62,8 @@ public:
 		}
 
 		bd[p.x][p.y] = c;
+		gotoxy(p.x, p.y);
+		putchar(c);
 	}
 
 	gameBoard() {
@@ -65,6 +80,7 @@ public:
 		bd[H+1][W+1] = '+';
 		bd[0][W+1] = '+';
 		bd[0][0] = '+';
+		print();
 	}
 
 	bool chkBlank(Point p) {
@@ -89,9 +105,13 @@ public:
 		for (int i = 1; i <= H; ++i)
 			for (int j = 1; j <= W; ++j)
 				if (bd[i][j] == blank)
-					pt.push_back(blank);
+					pt.push_back(Point(i, j));
         random_shuffle(pt.begin(), pt.end());
 		return pt[0];
+	}
+
+	char getPix(Point p) {
+		return bd[p.x][p.y];
 	}
 
 	void setBlank(Point p) {
@@ -99,16 +119,7 @@ public:
             // ERROR handle
 			return ;
 		}
-        bd.setPix(p, blank);
-	}
-
-    void print() {
-		cls();
-		for (int i = 0; i < H+2; ++i) {
-			for (int j = 0; j < W+2; ++j)
-				putchar(bd[i][j]);
-			puts("");
-		}
+        setPix(p, blank);
 	}
 
 };
