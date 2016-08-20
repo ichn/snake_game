@@ -194,6 +194,7 @@ int main() {
 
 	cls();
 	printf("Game Over!\n");
+	printf("Your score : %d\n", game->que.getNum());
     getch();
 
 	return 0;
