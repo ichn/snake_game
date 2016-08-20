@@ -4,3 +4,14 @@ To run it, just double click `make.bat`, use h/j/k/l or number 4/5/8/6 for movin
 To pause while playing, press p;
 
 I think you can use it to help you adapt to vim operation. :-)
+
+
+-------------
+
+TODO:
+
+* modular
+* using wxpython for graphic interface
+* AI
+* Multi player
+
