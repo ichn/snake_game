@@ -14,8 +14,8 @@ using namespace std;
 #include "random.h"
 #include "game.h"
 
-const int W = 40;
-const int H = 20;
+const int W = 15;
+const int H = 10;
 
 const int dx[] = {0, 0, 1, -1};
 const int dy[] = {1, -1, 0, 0};
